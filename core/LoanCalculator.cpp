@@ -48,7 +48,32 @@ std::vector<PaymentSchedule> LoanCalculator::generatePaymentSchedule(const LoanD
     //    h. Add payment to schedule vector
     // 5. Return the schedule vector
     
+    // Implementacion 1.
     std::vector<PaymentSchedule> schedule;
-    // Your implementation here
+    // Implementaicon 2.
+    double monthlyRate = loan.annualInterestRate / 100.0 / 12.0;
+    double remainingBalance = loan.loanAmount;
+
+    for(int month = 1; month <= loan.termInMonths; ++month){
+        // a
+        PaymentSchedule payment;
+        // b
+        payment.month = month;
+        // c
+        payment.interest = remainingBalance * monthlyRate;
+        // d
+        payment.principal = loan.monthlyPayment - payment.interest;
+        // e
+        payment.payment = loan.monthlyPayment;
+        //f
+        remainingBalance -= payment.principal;
+        //g
+        if(remainingBalance < 0.01){
+            payment.remainingBalance = 0.00;
+        }
+        payment.remainingBalance = remainingBalance;
+        //h 
+        schedule.push_back(payment);
+    }
     return schedule;
 }
