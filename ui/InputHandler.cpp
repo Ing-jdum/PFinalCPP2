@@ -1,3 +1,4 @@
+
 #include "InputHandler.h"
 #include "../utils/Validation.h"
 #include <iostream>
@@ -11,51 +12,67 @@ std::string InputHandler::getString(const std::string& prompt) {
 }
 
 double InputHandler::getDouble(const std::string& prompt) {
-    // TODO: Get a valid double from user input with validation
-    // INSTRUCTIONS:
-    // 1. Use a loop to keep asking until valid input
-    // 2. Display the prompt
-    // 3. Read a line of input using std::getline
-    // 4. Use Validation::isValidDouble() to check if input is valid
-    // 5. If valid, convert using std::stod() and return
-    // 6. If invalid, show error message and ask again
-    // 7. Handle the case where user enters non-numeric input
-
-    // Your implementation here
-    return 0.0;
+    std::string input;
+    double value;
+    
+    while (true) {
+        std::cout << prompt;
+        std::getline(std::cin, input);
+        
+        if (Validation::isValidDouble(input)) {
+            try {
+                value = std::stod(input);
+                break;
+            } catch (const std::exception&) {
+                std::cout << "Invalid number. Please try again." << std::endl;
+            }
+        } else {
+            std::cout << "Invalid number format. Please try again." << std::endl;
+        }
+    }
+    
+    return value;
 }
 
 int InputHandler::getInt(const std::string& prompt) {
     std::string input;
+    int value;
+    
     while (true) {
         std::cout << prompt;
         std::getline(std::cin, input);
-        input = Validation::trim(input);
         
         if (Validation::isValidInt(input)) {
             try {
-                return std::stoi(input);
+                value = std::stoi(input);
+                break;
             } catch (const std::exception&) {
-                std::cout << "Invalid input. Please enter a valid integer." << std::endl;
+                std::cout << "Invalid number. Please try again." << std::endl;
             }
         } else {
-            std::cout << "Invalid input. Please enter a valid integer." << std::endl;
+            std::cout << "Invalid integer format. Please try again." << std::endl;
         }
     }
+    
+    return value;
 }
 
 bool InputHandler::getYesNo(const std::string& prompt) {
-    // TODO: Get yes/no input from user
-    // INSTRUCTIONS:
-    // 1. Use a loop to keep asking until valid input
-    // 2. Display prompt with " (y/n): " suffix
-    // 3. Read input and convert to lowercase using Validation::toLowerCase()
-    // 4. Check if input is "y", "yes", "n", or "no"
-    // 5. Return true for yes, false for no
-    // 6. Show error for invalid input and ask again
-
-    // Your implementation here
-    return false;
+    std::string input;
+    
+    while (true) {
+        std::cout << prompt << " (y/n): ";
+        std::getline(std::cin, input);
+        input = Validation::toLowerCase(Validation::trim(input));
+        
+        if (input == "y" || input == "yes") {
+            return true;
+        } else if (input == "n" || input == "no") {
+            return false;
+        } else {
+            std::cout << "Please enter 'y' or 'n'." << std::endl;
+        }
+    }
 }
 
 void InputHandler::clearInputStream() {
@@ -64,11 +81,6 @@ void InputHandler::clearInputStream() {
 }
 
 void InputHandler::waitForEnter() {
-    // TODO: Wait for user to press Enter
-    // INSTRUCTIONS:
-    // 1. Display message "Press Enter to continue..."
-    // 2. Use std::cin.ignore() to wait for Enter key
-    // 3. Use std::numeric_limits<std::streamsize>::max() for the count parameter
-
-    // Your implementation here
+    std::cout << "\nPress Enter to continue...";
+    std::cin.get();
 }

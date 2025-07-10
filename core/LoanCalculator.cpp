@@ -13,7 +13,19 @@ LoanDetails LoanCalculator::calculateLoan(double loanAmount, double annualIntere
     // 6. Return the completed LoanDetails struct
     
     LoanDetails loan;
-    // Your implementation here
+    
+    double monthlyInterestRate = annualInterestRate / 100.0 / 12.0;
+    double monthlyPayment = calculateMonthlyPayment(loanAmount, monthlyInterestRate, termInMonths);
+    double totalAmount = monthlyPayment * termInMonths;
+    double totalInterest = totalAmount - loanAmount;
+
+    loan.loanAmount = loanAmount;
+    loan.annualInterestRate = annualInterestRate;
+    loan.monthlyPayment = monthlyPayment;
+    loan.totalAmount=totalAmount;
+    loan.totalInterest = totalInterest;
+    loan.termInMonths = termInMonths;
+
     return loan;
 }
 
@@ -27,8 +39,10 @@ double LoanCalculator::calculateMonthlyPayment(double loanAmount, double monthly
     // 3. Use std::pow(base, exponent) for power calculations
     // 4. Return the calculated monthly payment
     
-    // Your implementation here
-    return 0.0;
+    if(monthlyRate == 0){
+        return loanAmount / termInMonths;
+    }
+    return (loanAmount *  (monthlyRate * pow((1 + monthlyRate), termInMonths))/(pow((1 + monthlyRate), termInMonths) - 1));
 }
 
 std::vector<PaymentSchedule> LoanCalculator::generatePaymentSchedule(const LoanDetails& loan) {
