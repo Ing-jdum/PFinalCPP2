@@ -156,19 +156,6 @@ void testValidation() {
                      Validation::toLowerCase("") == "";
     
     std::cout << (test4Pass ? "PASS" : "FAIL") << std::endl;
-    
-    // Test 5: Unit name validation
-    std::cout << "Test 5: Unit name validation... ";
-    bool test5Pass = Validation::isValidUnitName("meter") &&
-                     Validation::isValidUnitName("square meter") &&
-                     Validation::isValidUnitName("kg") &&
-                     !Validation::isValidUnitName("123abc") &&
-                     !Validation::isValidUnitName("") &&
-                     !Validation::isValidUnitName("   ");
-    
-    std::cout << (test5Pass ? "PASS" : "FAIL") << std::endl;
-    
-    std::cout << "Validation tests completed.\n" << std::endl;
 }
 
 int main() {

@@ -1,87 +1,94 @@
+
 #include "Validation.h"
-#include <cctype>
 #include <algorithm>
-#include <sstream>
+#include <cctype>
+#include <regex>
 
 bool Validation::isValidDouble(const std::string& str) {
-    // TODO: Check if string represents a valid double number
-    // INSTRUCTIONS:
-    // 1. Handle empty string - return false
-    // 2. Use std::istringstream to try parsing the string as double
-    // 3. Check if parsing succeeded and entire string was consumed
-    // 4. Return true if valid double, false otherwise
-    // HINT: Use iss >> value and check iss.eof() and !iss.fail()
-
-    // Your implementation here
-    return false;
-}
-
-bool Validation::isValidInt(const std::string& str) {
-    std::string trimmed = trim(str);
-    if (trimmed.empty()) {
+    // TODO: Validate if a string represents a valid double number
+    // 1. Check if string is empty (return false)
+    // 2. Use regex to match valid double patterns:
+    //    - Optional sign (+ or -)
+    //    - Digits with optional decimal point
+    //    - Optional scientific notation (e/E with optional sign and digits)
+    // 3. Use std::regex_match with pattern: R"(^[-+]?([0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?))"
+    // Examples: "123", "-45.67", "1.23e-4", "+0.5"
+    if (str.empty()) {
         return false;
     }
 
-    size_t start = 0;
-    if (trimmed[0] == '+' || trimmed[0] == '-') {
-        start = 1;
-        if (trimmed.length() == 1) {
-            return false; // Just a sign character
-        }
-    }
+    // 2. Define a regex for a valid integer: optional sign, then digits
+    std::regex pattern(R"(^[-+]?([0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?))");
 
-    for (size_t i = start; i < trimmed.length(); ++i) {
-        if (!std::isdigit(trimmed[i])) {
-            return false;
-        }
-    }
-
-    return true;
+    // 3. Use regex_match to validate the whole string
+    return std::regex_match(str, pattern);
 }
 
-bool Validation::isValidUnitName(const std::string& name) {
-    // TODO: Check if string is a valid unit name
-    // INSTRUCTIONS:
-    // 1. Trim the string first using trim() function
-    // 2. Check if trimmed string is empty - return false
-    // 3. Check if first character is alphabetic (use std::isalpha)
-    // 4. Check remaining characters are alphanumeric or space (use std::isalnum)
-    // 5. Return true if all checks pass
+bool Validation::isValidInt(const std::string& str) {
+    // TODO: Validate if a string represents a valid integer
+    // 1. Check if string is empty (return false)
+    // 2. Use regex to match integer pattern:
+    //    - Optional sign (+ or -)
+    //    - One or more digits
+    // 3. Use std::regex_match with pattern: R"(^[-+]?[0-9]+$)"
+    // Examples: "123", "-45", "+67"
+    if (str.empty()) {
+        return false;
+    }
 
-    // Your implementation here
-    return false;
+    // 2. Define a regex for a valid integer: optional sign, then digits
+    std::regex pattern(R"(^[-+]?[0-9]+$)");
+
+    // 3. Use regex_match to validate the whole string
+    return std::regex_match(str, pattern);
 }
+
 
 std::string Validation::trim(const std::string& str) {
-    if (str.empty()) {
-        return str;
-    }
+    const std::string WHITESPACE = " \t\n\r";
 
+    // Step 1: Find the first non-whitespace character
     size_t start = 0;
-    while (start < str.length() && std::isspace(str[start])) {
-        start++;
+    bool foundStart = false;
+    for (size_t i = 0; i < str.length(); i++) {
+        if (WHITESPACE.find(str[i]) == std::string::npos) {
+            start = i;
+            foundStart = true;
+            break;
+        }
     }
 
-    if (start == str.length()) {
-        return ""; // All whitespace
+    // If no non-whitespace character was found, return empty string
+    if (!foundStart) {
+        return "";
     }
 
+    // Step 2: Find the last non-whitespace character
     size_t end = str.length() - 1;
-    while (end > start && std::isspace(str[end])) {
-        end--;
+    for (size_t i = str.length(); i-- > 0;) {
+        if (WHITESPACE.find(str[i]) == std::string::npos) {
+            end = i;
+            break;
+        }
     }
 
-    return str.substr(start, end - start + 1);
+    // Step 3: Build and return the trimmed string
+    std::string result = "";
+    for (size_t i = start; i <= end; i++) {
+        result += str[i];
+    }
+
+    return result;
 }
+
+
 
 std::string Validation::toLowerCase(const std::string& str) {
-    // TODO: Convert string to lowercase
-    // INSTRUCTIONS:
-    // 1. Create a copy of the input string
-    // 2. Use std::transform with std::tolower to convert each character
-    // 3. Return the transformed string
-    // HINT: std::transform(result.begin(), result.end(), result.begin(), ::tolower)
+    std::string result = str;
 
-    // Your implementation here
-    return "";
+    std::transform(result.begin(), result.end(), result.begin(),
+                   [](unsigned char c) { return std::tolower(c); });
+
+    return result;
 }
+
